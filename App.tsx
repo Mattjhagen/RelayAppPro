@@ -20,7 +20,8 @@ import * as Clipboard from 'expo-clipboard';
 import axios from 'axios';
 
 const STORAGE_KEY = 'OPENCODE_SERVER_URL';
-const DEFAULT_SERVER_URL = 'https://os.relayapp.pro'; // Your Cloudflare tunnel URL
+const MODEL_KEY = 'OPENCODE_MODEL';
+const DEFAULT_SERVER_URL = 'https://opencode.relayapp.pro'; // Your Cloudflare tunnel URL
 
 interface Message {
   id: string;
