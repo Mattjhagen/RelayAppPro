@@ -10,7 +10,7 @@ const path = require('path');
 const cors = require('cors');
 
 const app = express();
-const PORT = process.env.PWA_PORT || 8080;
+const PORT = process.env.PWA_PORT || 8081;
 const PWA_DIR = path.join(__dirname, '../pwa');
 
 // Middleware

@@ -12,7 +12,7 @@ const { WebSocket, WebSocketServer } = require('ws');
 const http = require('http');
 
 const app = express();
-const PORT = process.env.PORT || 7071;
+const PORT = process.env.PORT || 7072;
 const OPENCODE_PATH = '/snap/bin/opencode';
 
 // Middleware
