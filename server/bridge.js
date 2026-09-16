@@ -152,6 +152,7 @@ async function runOpenCode(message, options = {}) {
         ...process.env,
         TERM: 'xterm-256color',
       },
+      stdio: ['ignore', 'pipe', 'pipe'], // Close stdin, pipe stdout/stderr
     });
 
     let output = '';
@@ -239,6 +240,7 @@ async function handleChatViaWebSocket(ws, data) {
         ...process.env,
         TERM: 'xterm-256color',
       },
+      stdio: ['ignore', 'pipe', 'pipe'], // Close stdin, pipe stdout/stderr
     });
 
     let responseText = '';
