@@ -5,12 +5,12 @@ ingress:
   # PWA Website
   - hostname: opencode-app.relayapp.pro
     service: http://localhost:8081
-  # API Bridge
+  # API Bridge (running on R410)
   - hostname: opencode.relayapp.pro
-    service: http://localhost:7072
-  # WebSocket support
+    service: http://100.65.34.60:7072
+  # WebSocket support (running on R410)
   - hostname: opencode.relayapp.pro
     path: /ws
-    service: http://localhost:7072
+    service: http://100.65.34.60:7072
   # Fallback
   - service: http_status:404

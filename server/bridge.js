@@ -139,6 +139,9 @@ async function runOpenCode(message, options = {}) {
       args.push('--session', options.sessionId);
     }
 
+    // Use JSON format for reliable output parsing
+    args.push('--format', 'json');
+
     // Add the message
     args.push(message);
 
@@ -148,17 +151,33 @@ async function runOpenCode(message, options = {}) {
       env: {
         ...process.env,
         TERM: 'xterm-256color',
-        FORCE_COLOR: '0', // Disable color codes
       },
     });
 
     let output = '';
     let errorOutput = '';
+    let responseText = '';
 
     opencode.stdout.on('data', (data) => {
       const chunk = data.toString();
       output += chunk;
-      console.log('OpenCode output:', chunk.substring(0, 200));
+
+      // Parse JSON events line by line
+      const lines = chunk.split('\n');
+      for (const line of lines) {
+        if (line.trim()) {
+          try {
+            const event = JSON.parse(line);
+            if (event.type === 'text' && event.part && event.part.text) {
+              responseText += event.part.text;
+            }
+          } catch (e) {
+            // Not valid JSON, skip
+          }
+        }
+      }
+
+      console.log('OpenCode event:', chunk.substring(0, 200));
     });
 
     opencode.stderr.on('data', (data) => {
@@ -167,10 +186,8 @@ async function runOpenCode(message, options = {}) {
     });
 
     opencode.on('close', (code) => {
-      if (code === 0 || output.length > 0) {
-        // Clean up the output
-        const cleaned = cleanOutput(output);
-        resolve(cleaned || 'Response received but no content available.');
+      if (code === 0 || responseText.length > 0) {
+        resolve(responseText || 'Response received but no content available.');
       } else {
         reject(new Error(errorOutput || `OpenCode exited with code ${code}`));
       }
@@ -214,32 +231,47 @@ async function handleChatViaWebSocket(ws, data) {
 
     if (model) args.push('-m', model);
     if (sessionId) args.push('--session', sessionId);
+    args.push('--format', 'json');
     args.push(message);
 
     const opencode = spawn(OPENCODE_PATH, args, {
       env: {
         ...process.env,
         TERM: 'xterm-256color',
-        FORCE_COLOR: '0',
       },
     });
 
-    let buffer = '';
+    let responseText = '';
 
     opencode.stdout.on('data', (data) => {
-      buffer += data.toString();
-      const cleaned = cleanOutput(buffer);
+      const chunk = data.toString();
 
-      ws.send(JSON.stringify({
-        type: 'chunk',
-        content: cleaned,
-      }));
+      // Parse JSON events line by line
+      const lines = chunk.split('\n');
+      for (const line of lines) {
+        if (line.trim()) {
+          try {
+            const event = JSON.parse(line);
+            if (event.type === 'text' && event.part && event.part.text) {
+              responseText += event.part.text;
+
+              // Send chunks as they arrive
+              ws.send(JSON.stringify({
+                type: 'chunk',
+                content: responseText,
+              }));
+            }
+          } catch (e) {
+            // Not valid JSON, skip
+          }
+        }
+      }
     });
 
     opencode.on('close', (code) => {
       ws.send(JSON.stringify({
         type: 'complete',
-        content: cleanOutput(buffer),
+        content: responseText,
       }));
     });
 
