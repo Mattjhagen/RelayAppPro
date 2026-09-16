@@ -98,6 +98,11 @@ app.get('/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
 
+// Serve index.html for root path
+app.get('/', (req, res) => {
+  res.sendFile(path.join(pwaPath, 'index.html'));
+});
+
 // API endpoint for chat
 app.post('/api/chat', async (req, res) => {
   try {
