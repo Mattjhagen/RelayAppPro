@@ -46,21 +46,26 @@ export default function App() {
   const [inputText, setInputText] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [serverUrl, setServerUrl] = useState(DEFAULT_SERVER_URL);
+  const [selectedModel, setSelectedModel] = useState('');
   const [showSettings, setShowSettings] = useState(false);
   const flatListRef = useRef<FlatList>(null);
 
   useEffect(() => {
-    loadServerUrl();
+    loadSettings();
   }, []);
 
-  const loadServerUrl = async () => {
+  const loadSettings = async () => {
     try {
-      const stored = await SecureStore.getItemAsync(STORAGE_KEY);
-      if (stored) {
-        setServerUrl(stored);
+      const storedUrl = await SecureStore.getItemAsync(STORAGE_KEY);
+      if (storedUrl) {
+        setServerUrl(storedUrl);
+      }
+      const storedModel = await SecureStore.getItemAsync(MODEL_KEY);
+      if (storedModel) {
+        setSelectedModel(storedModel);
       }
     } catch (error) {
-      console.error('Failed to load server URL:', error);
+      console.error('Failed to load settings:', error);
     }
   };
 
@@ -188,6 +193,16 @@ export default function App() {
     );
   };
 
+  const saveSettings = async () => {
+    try {
+      await SecureStore.setItemAsync(STORAGE_KEY, serverUrl);
+      await SecureStore.setItemAsync(MODEL_KEY, selectedModel);
+      setShowSettings(false);
+    } catch (error) {
+      console.error('Failed to save settings:', error);
+    }
+  };
+
   if (showSettings) {
     return (
       <PaperProvider theme={theme}>
@@ -200,7 +215,7 @@ export default function App() {
                 Settings
               </Text>
             </View>
-            <View style={styles.settingsContent}>
+            <ScrollView style={styles.settingsContent}>
               <Text style={[styles.settingsLabel, { color: theme.colors.onBackground }]}>
                 Server URL
               </Text>
@@ -211,21 +226,57 @@ export default function App() {
                 }]}
                 value={serverUrl}
                 onChangeText={setServerUrl}
-                placeholder="https://your-tunnel.trycloudflare.com"
+                placeholder="https://opencode.relayapp.pro"
                 placeholderTextColor={isDark ? '#64748b' : '#94a3b8'}
                 autoCapitalize="none"
                 autoCorrect={false}
               />
+
+              <Text style={[styles.settingsLabel, { color: theme.colors.onBackground, marginTop: 20 }]}>
+                Model
+              </Text>
+              <View style={[styles.pickerContainer, {
+                backgroundColor: isDark ? '#1e293b' : '#f1f5f9',
+              }]}>
+                <Picker
+                  selectedValue={selectedModel}
+                  onValueChange={(itemValue) => setSelectedModel(itemValue)}
+                  style={[styles.picker, { color: theme.colors.onBackground }]}
+                  dropdownIconColor={theme.colors.onBackground}
+                >
+                  <Picker.Item label="Default" value="" />
+
+                  <Picker.Item label="🆓 FREE OPENCODE MODELS" value="" enabled={false} />
+                  {FREE_MODELS.map((model) => (
+                    <Picker.Item
+                      key={model.value}
+                      label={`  ${model.label}`}
+                      value={model.value}
+                    />
+                  ))}
+
+                  <Picker.Item label="" value="" enabled={false} />
+                  <Picker.Item label="💎 PREMIUM MODELS" value="" enabled={false} />
+                  {PREMIUM_MODELS.map((model) => (
+                    <Picker.Item
+                      key={model.value}
+                      label={`  ${model.label}`}
+                      value={model.value}
+                    />
+                  ))}
+                </Picker>
+              </View>
+              <Text style={[styles.settingsHint, { color: theme.colors.onSurfaceVariant }]}>
+                Free OpenCode models don't require API keys. Premium models need your own API credentials configured in OpenCode.
+              </Text>
+
               <TouchableOpacity
                 style={styles.saveButton}
-                onPress={() => {
-                  saveServerUrl(serverUrl);
-                  setShowSettings(false);
-                }}
+                onPress={saveSettings}
               >
-                <Text style={styles.saveButtonText}>Save</Text>
+                <Text style={styles.saveButtonText}>Save Settings</Text>
               </TouchableOpacity>
-            </View>
+            </ScrollView>
           </SafeAreaView>
         </SafeAreaProvider>
       </PaperProvider>
@@ -414,5 +465,18 @@ const styles = StyleSheet.create({
     color: '#ffffff',
     fontSize: 16,
     fontWeight: '600',
+  },
+  pickerContainer: {
+    borderRadius: 12,
+    marginBottom: 8,
+    overflow: 'hidden',
+  },
+  picker: {
+    height: 50,
+  },
+  settingsHint: {
+    fontSize: 12,
+    marginBottom: 20,
+    lineHeight: 16,
   },
 });
