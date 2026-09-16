@@ -1,0 +1,33 @@
+node_modules/
+.expo/
+.expo-shared/
+dist/
+npm-debug.*
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+*.orig.*
+web-build/
+*.log
+.env
+.env.local
+
+# Android
+android/
+*.apk
+*.aab
+
+# iOS
+ios/
+*.ipa
+
+# Server
+server/logs/
+server/node_modules/
+server/.env
+
+# System
+.DS_Store
+*.swp

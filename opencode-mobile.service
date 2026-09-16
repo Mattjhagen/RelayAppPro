@@ -1,0 +1,19 @@
+[Unit]
+Description=OpenCode Mobile Bridge Server
+After=network.target
+
+[Service]
+Type=simple
+User=matt
+WorkingDirectory=/home/matt/opencode-mobile/server
+ExecStart=/usr/bin/node bridge.js
+Restart=always
+RestartSec=10
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=opencode-mobile
+Environment=NODE_ENV=production
+Environment=PORT=7071
+
+[Install]
+WantedBy=multi-user.target

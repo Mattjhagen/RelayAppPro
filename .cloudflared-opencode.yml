@@ -1,0 +1,13 @@
+tunnel: c226c5ef-a3fb-4685-9a7e-c0522990693a
+credentials-file: /home/matt/.cloudflared/c226c5ef-a3fb-4685-9a7e-c0522990693a.json
+
+ingress:
+  # OpenCode Mobile Bridge
+  - hostname: opencode.relayapp.pro
+    service: http://localhost:7071
+  # WebSocket support
+  - hostname: opencode.relayapp.pro
+    path: /ws
+    service: http://localhost:7071
+  # Fallback
+  - service: http_status:404
