@@ -105,6 +105,7 @@ export default function App() {
       const response = await axios.post(`${serverUrl}/api/chat`, {
         message: inputText.trim(),
         history: messages.slice(-10), // Send last 10 messages for context
+        model: selectedModel || undefined, // Send selected model if set
       }, {
         timeout: 120000, // 2 minute timeout
       });
