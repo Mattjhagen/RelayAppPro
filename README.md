@@ -1,6 +1,18 @@
 # OpenCode Mobile
 
+[![GitHub](https://img.shields.io/badge/GitHub-RelayAppPro-blue?logo=github)](https://github.com/Mattjhagen/RelayAppPro)
+[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+[![React Native](https://img.shields.io/badge/React%20Native-0.74-61DAFB?logo=react)](https://reactnative.dev/)
+[![Expo](https://img.shields.io/badge/Expo-51-000020?logo=expo)](https://expo.dev/)
+[![Node.js](https://img.shields.io/badge/Node.js-20+-339933?logo=node.js)](https://nodejs.org/)
+
 A flagship Android app wrapper for OpenCode that provides a ChatGPT/Claude/Gemini-like experience on mobile devices.
+
+## 🔗 Quick Links
+
+- **Repository:** [https://github.com/Mattjhagen/RelayAppPro](https://github.com/Mattjhagen/RelayAppPro)
+- **Issues:** [Report a bug or request a feature](https://github.com/Mattjhagen/RelayAppPro/issues)
+- **Documentation:** See below or check out [QUICKSTART.md](QUICKSTART.md) for a 5-minute setup guide
 
 ## Features
 
