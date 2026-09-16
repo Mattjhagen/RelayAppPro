@@ -10,10 +10,46 @@ const cors = require('cors');
 const { spawn } = require('child_process');
 const { WebSocket, WebSocketServer } = require('ws');
 const http = require('http');
+const { execSync } = require('child_process');
 
 const app = express();
 const PORT = process.env.PORT || 7072;
-const OPENCODE_PATH = '/snap/bin/opencode';
+
+// Auto-detect OpenCode path
+let OPENCODE_PATH = process.env.OPENCODE_PATH;
+if (!OPENCODE_PATH) {
+    try {
+        // Try to find opencode in PATH
+        OPENCODE_PATH = execSync('which opencode', { encoding: 'utf8' }).trim();
+        console.log('✅ OpenCode found at:', OPENCODE_PATH);
+    } catch (e) {
+        // Fallback paths
+        const possiblePaths = [
+            '/snap/bin/opencode',           // Linux snap
+            '/usr/local/bin/opencode',      // Mac Intel Homebrew
+            '/opt/homebrew/bin/opencode',   // Mac Apple Silicon Homebrew
+            'opencode',                      // In PATH
+        ];
+
+        for (const path of possiblePaths) {
+            try {
+                execSync(`${path} --version`, { stdio: 'ignore' });
+                OPENCODE_PATH = path;
+                console.log('✅ OpenCode found at:', path);
+                break;
+            } catch (e) {
+                // Try next path
+            }
+        }
+
+        if (!OPENCODE_PATH) {
+            console.error('❌ OpenCode not found. Please install opencode and ensure it\'s in your PATH.');
+            console.error('   Mac: brew install anomalyco/tap/opencode');
+            console.error('   Linux: snap install opencode');
+            process.exit(1);
+        }
+    }
+}
 
 // Middleware
 app.use(cors());
