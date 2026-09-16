@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#0f172a">
+    <meta name="description" content="OpenCode Mobile - AI-powered coding assistant">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="OpenCode">
+
+    <title>OpenCode Mobile</title>
+
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="manifest.json">
+
+    <!-- Icons -->
+    <link rel="icon" type="image/png" sizes="192x192" href="../assets/icon.png">
+    <link rel="apple-touch-icon" href="../assets/icon.png">
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="css/styles.css">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="header-left">
+                <h1 class="app-title">OpenCode</h1>
+            </div>
+            <div class="header-right">
+                <button class="icon-button" id="clearBtn" title="Clear conversation">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/>
+                    </svg>
+                </button>
+                <button class="icon-button" id="settingsBtn" title="Settings">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="3"/>
+                        <path d="M12 1v6m0 6v6M1 12h6m6 0h6"/>
+                    </svg>
+                </button>
+                <button class="icon-button" id="themeBtn" title="Toggle theme">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+                    </svg>
+                </button>
+            </div>
+        </header>
+
+        <!-- Messages Container -->
+        <main class="messages-container" id="messagesContainer">
+            <div class="message assistant">
+                <div class="message-bubble">
+                    <p>👋 Welcome to OpenCode Mobile! I'm ready to help you with coding, debugging, and any technical questions you have. What would you like to work on today?</p>
+                </div>
+            </div>
+        </main>
+
+        <!-- Input Container -->
+        <div class="input-container">
+            <textarea
+                class="message-input"
+                id="messageInput"
+                placeholder="Message OpenCode..."
+                rows="1"
+                maxlength="4000"
+            ></textarea>
+            <button class="send-button" id="sendBtn" disabled>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                    <path d="M12 19V5M5 12l7-7 7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </button>
+        </div>
+
+        <!-- Settings Modal -->
+        <div class="modal" id="settingsModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Settings</h2>
+                    <button class="close-button" id="closeSettingsBtn">×</button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="serverUrl">Server URL</label>
+                        <input
+                            type="url"
+                            id="serverUrl"
+                            class="form-control"
+                            placeholder="https://opencode.relayapp.pro"
+                            value="https://opencode.relayapp.pro"
+                        >
+                        <small>Enter your OpenCode server URL</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="modelSelect">Model</label>
+                        <select id="modelSelect" class="form-control">
+                            <option value="">Default</option>
+                            <option value="anthropic/claude-3-5-sonnet">Claude 3.5 Sonnet</option>
+                            <option value="anthropic/claude-3-opus">Claude 3 Opus</option>
+                            <option value="openai/gpt-4">GPT-4</option>
+                            <option value="openai/gpt-3.5-turbo">GPT-3.5 Turbo</option>
+                        </select>
+                    </div>
+                    <button class="btn-primary" id="saveSettingsBtn">Save Settings</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Loading Indicator -->
+        <div class="loading-indicator" id="loadingIndicator">
+            <div class="spinner"></div>
+            <p>Thinking...</p>
+        </div>
+
+        <!-- Install Prompt -->
+        <div class="install-prompt" id="installPrompt">
+            <div class="install-content">
+                <p>Install OpenCode as an app for quick access!</p>
+                <button class="btn-primary" id="installBtn">Install</button>
+                <button class="btn-secondary" id="dismissInstallBtn">Maybe Later</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/marked.min.js"></script>
+    <script src="js/app.js"></script>
+    <script>
+        // Register service worker
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('service-worker.js')
+                    .then(reg => console.log('Service Worker registered:', reg))
+                    .catch(err => console.error('Service Worker registration failed:', err));
+            });
+        }
+    </script>
+</body>
+</html>

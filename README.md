@@ -16,14 +16,27 @@ A flagship Android app wrapper for OpenCode that provides a ChatGPT/Claude/Gemin
 
 ## Features
 
+### 📱 Native Android App (React Native/Expo)
 - 🎨 Modern, polished UI matching flagship AI apps
 - 🌓 Automatic dark/light theme support
 - 💬 Chat-style interface with markdown rendering
-- 📱 Native Android experience with React Native
-- 🔐 Secure server connection via Cloudflare Tunnel
 - 📋 Copy message content
 - 🗑️ Clear conversation history
 - ⚙️ Configurable server URL
+
+### 🌐 Progressive Web App (PWA)
+- ✅ Install on any device (iOS, Android, Desktop)
+- ✅ Works offline with service worker caching
+- ✅ Automatic updates
+- ✅ Native app-like experience
+- ✅ No app store required
+- ✅ Access at: **https://app.relayapp.pro**
+
+### 🔐 Secure Infrastructure
+- Cloudflare Tunnel integration
+- HTTPS encryption
+- No port forwarding needed
+- DDoS protection
 
 ## Architecture
 
