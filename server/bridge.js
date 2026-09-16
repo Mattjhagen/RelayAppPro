@@ -180,11 +180,12 @@ async function runOpenCode(message, options = {}) {
       reject(new Error(`Failed to start opencode: ${err.message}`));
     });
 
-    // Timeout after 120 seconds
+    // Timeout after 5 minutes (300 seconds)
+    // OpenCode can take a long time, especially on first run
     setTimeout(() => {
       opencode.kill();
-      reject(new Error('Request timeout'));
-    }, 120000);
+      reject(new Error('Request timeout - OpenCode took longer than 5 minutes'));
+    }, 300000);
   });
 }
 
